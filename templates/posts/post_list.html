@@ -1,0 +1,45 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <div class="album py-5 bg-light">
+        <div class="container">
+            {% for post in object_list %}
+                {% if post.author == request.user %}
+                    <form method="POST" action="{% url 'post_delete' pk=post.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" value="DELETE" class="btn btn-primary">Delete</button>
+                    </form>
+                {% endif %}
+                <form action="{% url 'likes' pk=post.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type='submit' name='like' value="{{ post.id }}"
+                            class="btn btn-primary">Like
+                    </button>
+                </form>
+                <h3>{{ post.like }}</h3>
+                <h3>Liked by: {{ post.user_like.all|join:", " }}</h3>
+                <img src="{{ post.image.url }}" alt="NONE" , height="300" , width="300">
+                <h3>{{ post.description }}</h3>
+                <form action="{% url 'likes' pk=post.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type='submit' name='like' value="{{ post.id }}"
+                            class="btn btn-primary">Like
+                    </button>
+                </form>
+                {% for comment in comments %}
+                    {% if comment.post.pk == post.pk %}
+                        <p>{{ comment.author }}: {{ comment.text }} </p>
+                    {% endif %}
+                {% endfor %}
+                <form action="{% url 'comment' pk=post.pk %}" method="post">
+                    {% csrf_token %}
+                    <input id="text" type="text" name="text_comment">
+                    <button type='submit' name='like' value="comment"
+                            class="btn btn-primary">comment
+                    </button>
+                </form>
+
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
